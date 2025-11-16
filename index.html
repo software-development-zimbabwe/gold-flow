@@ -1,44 +1,1191 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My App Ideas</title>
+    <title>GoldFlow Zimbabwe - Premium Mining Platform</title>
     <style>
-        body { 
-            font-family: Arial; 
-            max-width: 400px; 
-            margin: 0 auto; 
-            padding: 20px;
-            background: #f0f0f0;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 12px #1a1a1a, 0 0 0 14px #000;
+            overflow: hidden;
+            position: relative;
+        }
+        
         .screen {
-            background: white;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        button {
-            padding: 15px;
             width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            background: #0a0a0a;
+        }
+        
+        .screen.active {
+            display: flex;
+        }
+        
+        .status-bar {
+            height: 44px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FF8C00);
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15), transparent);
+            border-radius: 50%;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header .subtitle {
+            font-size: 15px;
+            color: rgba(0,0,0,0.7);
+            font-weight: 500;
+        }
+        
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(180deg, #0a0a0a 0%, #121212 100%);
+        }
+        
+        .content::-webkit-scrollbar {
+            width: 0;
+        }
+        
+        .user-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .user-card {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            padding: 2px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .user-card:hover::before {
+            opacity: 1;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.2);
+        }
+        
+        .user-card .icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 8px rgba(255,215,0,0.3));
+        }
+        
+        .user-card .title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #fff;
+            letter-spacing: -0.3px;
+        }
+        
+        .premium-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .menu-item {
+            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255,215,0,0.15);
+            border-color: rgba(255,215,0,0.3);
+        }
+        
+        .menu-item .icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 2px 6px rgba(255,215,0,0.2));
+        }
+        
+        .menu-item .label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.2px;
+        }
+        
+        .nav-bar {
+            height: 80px;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 8px;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+            padding: 8px 16px;
+            border-radius: 12px;
+        }
+        
+        .nav-item.active {
+            color: #FFD700;
+            background: rgba(255,215,0,0.1);
+        }
+        
+        .nav-item .icon {
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-item .label {
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #000;
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+        
+        .back-button:hover {
+            background: rgba(0,0,0,0.6);
+            transform: scale(1.05);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(45,45,45,0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        
+        .glass-card .title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+        
+        .glass-card .value {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card .sub {
+            font-size: 12px;
+            color: #888;
+            margin-top: 6px;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .stat-row:last-child {
+            border: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .stat-row .label {
+            color: #888;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .stat-row .value {
+            font-weight: 700;
+            color: #fff;
+            font-size: 15px;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
             font-size: 16px;
-            margin: 5px 0;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+            letter-spacing: -0.3px;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255,215,0,0.4);
+        }
+        
+        .action-button:active {
+            transform: translateY(0);
+        }
+        
+        .list-item {
+            background: linear-gradient(135deg, rgba(30,30,30,0.8) 0%, rgba(45,45,45,0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .list-item:hover {
+            border-color: rgba(255,215,0,0.3);
+            transform: translateX(4px);
+        }
+        
+        .list-item .left {
+            flex: 1;
+        }
+        
+        .list-item .title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #fff;
+            font-size: 15px;
+        }
+        
+        .list-item .subtitle {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .list-item .right {
+            text-align: right;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+        
+        .status-badge.active {
+            background: linear-gradient(135deg, #00C851, #007E33);
+            color: white;
+        }
+        
+        .status-badge.pending {
+            background: linear-gradient(135deg, #ffbb33, #ff8800);
+            color: white;
+        }
+        
+        .status-badge.completed {
+            background: linear-gradient(135deg, #33b5e5, #0099CC);
+            color: white;
+        }
+        
+        .input-group {
+            margin-bottom: 18px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #aaa;
+            letter-spacing: 0.3px;
+        }
+        
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 16px;
+            background: rgba(30,30,30,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #fff;
+            transition: all 0.3s;
+        }
+        
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #FFD700;
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+        }
+        
+        .price-display {
+            background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,165,0,0.1));
+            border: 2px solid rgba(255,215,0,0.3);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .price-display .label {
+            font-size: 12px;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+        
+        .price-display .price {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .price-display .unit {
+            font-size: 16px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .alert {
+            background: linear-gradient(135deg, rgba(255,187,51,0.2), rgba(255,136,0,0.1));
+            border-left: 4px solid #FFA500;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            color: #FFA500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chart-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 180px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .intro-text {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin: 20px 0 30px;
+            line-height: 1.5;
+        }
+        
+        .monetization-banner {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 16px 0;
+            text-align: center;
+        }
+        
+        .monetization-banner .title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        
+        .monetization-banner .desc {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
-    <h1>App Idea: [Your App Name]</h1>
-    
-    <div class="screen">
-        <h2>Home Screen</h2>
-        <p>Description of what users see here</p>
-        <button onclick="location.href='#screen2'">Next Screen</button>
+    <div class="phone-frame">
+        <!-- Home Screen -->
+        <div class="screen active" id="home">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <h1>GoldFlow Zimbabwe</h1>
+                <div class="subtitle">Premium Mining Platform</div>
+            </div>
+            <div class="content">
+                <div class="intro-text">
+                    Streamline gold mining operations across the entire value chain
+                </div>
+                <div class="user-selector">
+                    <div class="user-card" onclick="showScreen('artisanal')">
+                        <div class="icon">⛏️</div>
+                        <div class="title">Artisanal Miner</div>
+                    </div>
+                    <div class="user-card" onclick="showScreen('buyer')">
+                        <div class="icon">💰</div>
+                        <div class="title">Gold Buyer</div>
+                        <div class="premium-badge">PREMIUM</div>
+                    </div>
+                    <div class="user-card" onclick="showScreen('refiner')">
+                        <div class="icon">🏭</div>
+                        <div class="title">Refinery</div>
+                        <div class="premium-badge">ENTERPRISE</div>
+                    </div>
+                    <div class="user-card" onclick="showScreen('regulator')">
+                        <div class="icon">📋</div>
+                        <div class="title">Regulator</div>
+                        <div class="premium-badge">GOVT</div>
+                    </div>
+                </div>
+                <div class="monetization-banner" onclick="showScreen('monetization')">
+                    <div class="title">💎 Revenue Model</div>
+                    <div class="desc">Tap to see how this platform generates sustainable revenue</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monetization Screen -->
+        <div class="screen" id="monetization">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('home')">←</button>
+                <h1>Revenue Strategy</h1>
+                <div class="subtitle">How to monetize this platform</div>
+            </div>
+            <div class="content">
+                <div class="glass-card">
+                    <div class="title">Transaction Fees</div>
+                    <div style="color: #fff; margin-top: 10px;">
+                        <div class="stat-row">
+                            <span class="label">Per Transaction</span>
+                            <span class="value">0.5% - 1.5%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="label">Avg Transaction</span>
+                            <span class="value">$1,200</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="label">Revenue Per Sale</span>
+                            <span class="value">$6 - $18</span>
+                        </div>
+                    </div>
+                    <div class="sub" style="margin-top: 15px; line-height: 1.5;">
+                        Charge buyers and sellers a small fee per verified transaction. With 45,821 monthly transactions in Zimbabwe, this alone generates substantial revenue.
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Subscription Tiers</div>
+                    <div style="margin-top: 15px;">
+                        <div style="background: rgba(255,215,0,0.1); padding: 15px; border-radius: 14px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="color: #FFD700; font-weight: 700; font-size: 14px;">BASIC - Free</div>
+                                    <div style="color: #888; font-size: 11px; margin-top: 3px;">Artisanal Miners</div>
+                                </div>
+                                <div style="color: #fff; font-weight: 700;">$0/mo</div>
+                            </div>
+                            <div style="color: #aaa; font-size: 11px; margin-top: 8px;">Limited transactions, basic price tracking</div>
+                        </div>
+                        <div style="background: rgba(102,126,234,0.15); padding: 15px; border-radius: 14px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="color: #667eea; font-weight: 700; font-size: 14px;">PRO - Buyers</div>
+                                    <div style="color: #888; font-size: 11px; margin-top: 3px;">Licensed Dealers</div>
+                                </div>
+                                <div style="color: #fff; font-weight: 700;">$49/mo</div>
+                            </div>
+                            <div style="color: #aaa; font-size: 11px; margin-top: 8px;">Unlimited scans, analytics dashboard, priority support</div>
+                        </div>
+                        <div style="background: rgba(118,75,162,0.15); padding: 15px; border-radius: 14px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="color: #764ba2; font-weight: 700; font-size: 14px;">ENTERPRISE</div>
+                                    <div style="color: #888; font-size: 11px; margin-top: 3px;">Refineries & Large Ops</div>
+                                </div>
+                                <div style="color: #fff; font-weight: 700;">$499/mo</div>
+                            </div>
+                            <div style="color: #aaa; font-size: 11px; margin-top: 8px;">API access, batch processing, compliance reporting</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Data & Analytics</div>
+                    <div style="color: #aaa; margin-top: 10px; line-height: 1.6; font-size: 13px;">
+                        Sell aggregated, anonymized market intelligence to refineries, exporters, and financial institutions. Gold price trends, production volumes by region, and supply chain insights are valuable.
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 12px;">
+                        <div style="color: #FFD700; font-size: 12px; font-weight: 600;">Estimated Value</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 700; margin-top: 4px;">$5,000 - $15,000/mo</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Government/Regulator Licensing</div>
+                    <div style="color: #aaa; margin-top: 10px; line-height: 1.6; font-size: 13px;">
+                        Charge Zimbabwe Mining Authority an annual license fee for real-time monitoring, compliance tracking, and fraud detection capabilities.
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 12px;">
+                        <div style="color: #FFD700; font-size: 12px; font-weight: 600;">Annual Contract</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 700; margin-top: 4px;">$50,000 - $200,000</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Financial Services Integration</div>
+                    <div style="color: #aaa; margin-top: 10px; line-height: 1.6; font-size: 13px;">
+                        Partner with mobile money providers (EcoCash, OneMoney) and banks. Earn a small percentage on payment processing or offer instant loans to miners against future gold sales.
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 12px;">
+                        <div style="color: #FFD700; font-size: 12px; font-weight: 600;">Payment Processing Fee</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 700; margin-top: 4px;">0.3% - 0.8%</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Equipment & Services Marketplace</div>
+                    <div style="color: #aaa; margin-top: 10px; line-height: 1.6; font-size: 13px;">
+                        Take commission on equipment sales, purity testing services, logistics, and mining supplies sold through the platform.
+                    </div>
+                    <div style="margin-top: 12px; padding: 12px; background: rgba(255,215,0,0.1); border-radius: 12px;">
+                        <div style="color: #FFD700; font-size: 12px; font-weight: 600;">Commission Rate</div>
+                        <div style="color: #fff; font-size: 20px; font-weight: 700; margin-top: 4px;">5% - 15%</div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="background: linear-gradient(135deg, rgba(0,200,81,0.2), rgba(0,126,51,0.1)); border-color: rgba(0,200,81,0.3);">
+                    <div class="title" style="color: #00C851;">PROJECTED MONTHLY REVENUE</div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <div style="font-size: 42px; font-weight: 900; color: #00C851;">$85K - $240K</div>
+                        <div style="color: #888; font-size: 12px; margin-top: 8px;">Based on conservative market penetration</div>
+                    </div>
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <div class="stat-row" style="border: none;">
+                            <span class="label">Year 1 Target</span>
+                            <span class="value" style="color: #00C851;">$500K - $1.2M</span>
+                        </div>
+                        <div class="stat-row" style="border: none;">
+                            <span class="label">Year 3 Target</span>
+                            <span class="value" style="color: #00C851;">$2M - $5M</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 16px; padding: 16px; margin-top: 20px;">
+                    <div style="color: #FFD700; font-weight: 700; font-size: 13px; margin-bottom: 8px;">KEY SUCCESS FACTORS</div>
+                    <div style="color: #aaa; font-size: 12px; line-height: 1.7;">
+                        • Start with free tier for miners to build network effects<br>
+                        • Government partnership is critical for legitimacy<br>
+                        • Mobile-first design for low-bandwidth areas<br>
+                        • Multilingual support (English, Shona, Ndebele)<br>
+                        • Build trust through transparent pricing
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artisanal Miner Dashboard -->
+        <div class="screen" id="artisanal">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('home')">←</button>
+                <h1>Miner Dashboard</h1>
+                <div class="subtitle">John Moyo • Basic Tier</div>
+            </div>
+            <div class="content">
+                <div class="glass-card">
+                    <div class="title">Live Gold Price</div>
+                    <div class="value">$63.50/g</div>
+                    <div class="sub">Updated 2 hours ago • Market open</div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">November Production</div>
+                    <div class="stat-row">
+                        <span class="label">Total Weight</span>
+                        <span class="value">245g</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Estimated Value</span>
+                        <span class="value">$15,557.50</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Transactions</span>
+                        <span class="value">12 sales</span>
+                    </div>
+                </div>
+
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showScreen('sell-gold')">
+                        <div class="icon">💰</div>
+                        <div class="label">Sell Gold</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="icon">📊</div>
+                        <div class="label">Price History</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="icon">📜</div>
+                        <div class="label">Transactions</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="icon">📍</div>
+                        <div class="label">Find Buyers</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="icon">📱</div>
+                        <div class="label">License Status</div>
+                    </div>
+                    <div class="menu-item">
+                        <div class="icon">📚</div>
+                        <div class="label">Resources</div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-bar">
+                <div class="nav-item active">
+                    <div class="icon">🏠</div>
+                    <div class="label">Home</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">💰</div>
+                    <div class="label">Sell</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📊</div>
+                    <div class="label">History</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">👤</div>
+                    <div class="label">Profile</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sell Gold Screen -->
+        <div class="screen" id="sell-gold">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('artisanal')">←</button>
+                <h1>Sell Gold</h1>
+                <div class="subtitle">New Transaction</div>
+            </div>
+            <div class="content">
+                <div class="price-display">
+                    <div class="label">Current Rate</div>
+                    <div class="price">$63.50</div>
+                    <div class="unit">per gram</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Weight (grams)</label>
+                    <input type="number" placeholder="Enter weight" value="25.5">
+                </div>
+
+                <div class="input-group">
+                    <label>Estimated Purity</label>
+                    <select>
+                        <option>22 Carat (~92%)</option>
+                        <option selected>18 Carat (~75%)</option>
+                        <option>14 Carat (~58%)</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Estimated Value</div>
+                    <div class="value">$1,214.06</div>
+                    <div class="sub">Based on 75% purity • 0.5% platform fee: $6.07</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Select Buyer</label>
+                    <select>
+                        <option>Fidelity Gold Refineries</option>
+                        <option>Local Registered Buyer - Harare</option>
+                        <option>Export Dealer - Bulawayo</option>
+                    </select>
+                </div>
+
+                <div class="alert">
+                    ⚠️ Ensure your mining license is current before proceeding
+                </div>
+
+                <button class="action-button">Generate Sale Code</button>
+                <button class="action-button" style="background: rgba(255,255,255,0.1); color: #FFD700;">Request Price Quote</button>
+            </div>
+        </div>
+
+        <!-- Buyer Dashboard -->
+        <div class="screen" id="buyer">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('home')">←</button>
+                <h1>Buyer Dashboard</h1>
+                <div class="subtitle">Licensed Dealer • Pro Tier</div>
+            </div>
+            <div class="content">
+                <div class="glass-card">
+                    <div class="title">Today's Activity</div>
+                    <div class="stat-row">
+                        <span class="label">Total Weight</span>
+                        <span class="value">1,245g</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Transactions</span>
+                        <span class="value">18</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Total Value</span>
+                        <span class="value">$79,057.50</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <h3 style="font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px;">Pending Purchases</h3>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">John Moyo</div>
+                        <div class="subtitle">25.5g • Code: GM-4521</div>
+                    </div>
+                    <div class="right">
+                        <div class="status-badge pending">Pending</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #fff;">$1,214.06</div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">Sarah Ncube</div>
+                        <div class="subtitle">18.2g • Code: GM-4520</div>
+                    </div>
+                    <div class="right">
+                        <div class="status-badge pending">Pending</div>
+                        <div style="font-size: 14px; font-weight: 700; color: #fff;">$867.15</div>
+                    </div>
+                </div>
+
+                <button class="action-button" onclick="showScreen('verify-purchase')">Scan Purchase Code</button>
+                <button class="action-button" style="background: rgba(255,255,255,0.1); color: #FFD700;">Update Price Offer</button>
+            </div>
+            <div class="nav-bar">
+                <div class="nav-item active">
+                    <div class="icon">🏠</div>
+                    <div class="label">Home</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📷</div>
+                    <div class="label">Scan</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📊</div>
+                    <div class="label">Reports</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">👤</div>
+                    <div class="label">Profile</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verify Purchase Screen -->
+        <div class="screen" id="verify-purchase">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('buyer')">←</button>
+                <h1>Verify Purchase</h1>
+                <div class="subtitle">Transaction GM-4521</div>
+            </div>
+            <div class="content">
+                <div style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d); height: 220px; border-radius: 24px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 24px; border: 2px solid rgba(255,215,0,0.2);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 56px; margin-bottom: 12px;">📷</div>
+                        <div style="font-weight: 600; font-size: 16px;">QR Scanner Active</div>
+                        <div style="font-size: 12px; opacity: 0.6; margin-top: 6px;">Align code within frame</div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Seller Information</div>
+                    <div class="stat-row">
+                        <span class="label">Name</span>
+                        <span class="value">John Moyo</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">License</span>
+                        <span class="value">AM-2024-1234</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Status</span>
+                        <span class="value" style="color: #00C851;">✓ Verified</span>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="title">Gold Details</div>
+                    <div class="stat-row">
+                        <span class="label">Weight</span>
+                        <span class="value">25.5g</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Purity</span>
+                        <span class="value">18K (~75%)</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Asking Price</span>
+                        <span class="value">$1,214.06</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Your Offer ($/g)</label>
+                    <input type="number" value="63.50">
+                </div>
+
+                <div class="input-group">
+                    <label>Payment Method</label>
+                    <select>
+                        <option>Mobile Money - EcoCash</option>
+                        <option>Mobile Money - OneMoney</option>
+                        <option>Bank Transfer</option>
+                        <option>Cash</option>
+                    </select>
+                </div>
+
+                <button class="action-button">Confirm Purchase</button>
+                <button class="action-button" style="background: linear-gradient(135deg, #dc3545, #c82333); color: white;">Reject Transaction</button>
+            </div>
+        </div>
+
+        <!-- Refinery Dashboard -->
+        <div class="screen" id="refiner">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('home')">←</button>
+                <h1>Refinery Portal</h1>
+                <div class="subtitle">Fidelity Refineries • Enterprise</div>
+            </div>
+            <div class="content">
+                <div class="glass-card">
+                    <div class="title">November Processing</div>
+                    <div class="stat-row">
+                        <span class="label">Total Received</span>
+                        <span class="value">125.4 kg</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Refined Output</span>
+                        <span class="value">118.2 kg</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Avg Purity</span>
+                        <span class="value">94.2%</span>
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    📈 Weekly Production Analytics
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <h3 style="font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px;">Active Batches</h3>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">Batch #RF-2024-445</div>
+                        <div class="subtitle">12.5kg • Started Nov 14</div>
+                    </div>
+                    <div class="right">
+                        <div class="status-badge active">Processing</div>
+                        <div style="font-size: 12px; color: #888;">2 days left</div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">Batch #RF-2024-444</div>
+                        <div class="subtitle">8.2kg • Started Nov 13</div>
+                    </div>
+                    <div class="right">
+                        <div class="status-badge completed">Complete</div>
+                        <div style="font-size: 12px; color: #888;">QC Ready</div>
+                    </div>
+                </div>
+
+                <button class="action-button">Create New Batch</button>
+                <button class="action-button" style="background: rgba(255,255,255,0.1); color: #FFD700;">Export Report</button>
+            </div>
+            <div class="nav-bar">
+                <div class="nav-item active">
+                    <div class="icon">🏠</div>
+                    <div class="label">Dashboard</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📦</div>
+                    <div class="label">Batches</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📊</div>
+                    <div class="label">Analytics</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">⚙️</div>
+                    <div class="label">Settings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regulator Dashboard -->
+        <div class="screen" id="regulator">
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>📶 🔋</span>
+            </div>
+            <div class="header">
+                <button class="back-button" onclick="showScreen('home')">←</button>
+                <h1>Regulator Portal</h1>
+                <div class="subtitle">Zimbabwe Mining Authority</div>
+            </div>
+            <div class="content">
+                <div class="glass-card">
+                    <div class="title">National Overview • November 2024</div>
+                    <div class="stat-row">
+                        <span class="label">Gold Produced</span>
+                        <span class="value">2,845 kg</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Active Miners</span>
+                        <span class="value">18,423</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Licensed Buyers</span>
+                        <span class="value">247</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Transactions</span>
+                        <span class="value">45,821</span>
+                    </div>
+                </div>
+
+                <div class="chart-placeholder">
+                    🗺️ Regional Production Heatmap
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <h3 style="font-size: 13px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 1px;">Priority Alerts</h3>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">Unlicensed Transaction</div>
+                        <div class="subtitle">Mazowe District • 2 hours ago</div>
+                    </div>
+                    <div class="right">
+                        <div style="font-size: 24px;">⚠️</div>
+                    </div>
+                </div>
+
+                <div class="list-item">
+                    <div class="left">
+                        <div class="title">License Renewals Due</div>
+                        <div class="subtitle">124 miners • This week</div>
+                    </div>
+                    <div class="right">
+                        <div style="font-size: 24px;">📋</div>
+                    </div>
+                </div>
+
+                <button class="action-button">License Management</button>
+                <button class="action-button" style="background: rgba(255,255,255,0.1); color: #FFD700;">Export Compliance Report</button>
+            </div>
+            <div class="nav-bar">
+                <div class="nav-item active">
+                    <div class="icon">🏠</div>
+                    <div class="label">Overview</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📋</div>
+                    <div class="label">Licenses</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">🔍</div>
+                    <div class="label">Monitor</div>
+                </div>
+                <div class="nav-item">
+                    <div class="icon">📈</div>
+                    <div class="label">Reports</div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="screen" id="screen2">
-        <h2>Second Screen</h2>
-        <p>What happens next</p>
-        <button onclick="location.href='#'">Back to Start</button>
-    </div>
+
+    <script>
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
